@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kalkulator</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+      }
+      #calculator {
+        width: 300px;
+        margin: 50px auto;
+      }
+      #display,
+      #history {
+        width: 100%;
+        margin-bottom: 10px;
+        height: 40px;
+        font-size: 18px;
+        text-align: right;
+        padding-right: 10px;
+      }
+      #history {
+        height: auto;
+        font-size: 14px;
+        text-align: left;
+        border: 1px solid #ccc;
+        padding: 10px;
+      }
+      .buttons {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+      }
+      button {
+        padding: 20px;
+        font-size: 18px;
+        border: none;
+        background-color: #f0f0f0;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      button.operator {
+        background-color: #007bff; /* Biru */
+        color: white;
+      }
+      button.clear {
+        background-color: #ff3b30; /* Merah */
+        color: white;
+      }
+      button.ce {
+        background-color: #ffc107; /* Kuning */
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="calculator">
+      <input type="text" id="display" disabled />
+      <div id="history"><strong>History:</strong><br /></div>
+
+      <div class="buttons">
+        <button class="clear" onclick="clearDisplay()">C</button>
+        <button class="ce" onclick="clearEntry()">CE</button>
+        <button onclick="appendValue('%')">%</button>
+        <button class="operator" onclick="appendValue('/')">÷</button>
+
+        <button onclick="appendValue('7')">7</button>
+        <button onclick="appendValue('8')">8</button>
+        <button onclick="appendValue('9')">9</button>
+        <button class="operator" onclick="appendValue('*')">×</button>
+
+        <button onclick="appendValue('4')">4</button>
+        <button onclick="appendValue('5')">5</button>
+        <button onclick="appendValue('6')">6</button>
+        <button class="operator" onclick="appendValue('-')">−</button>
+
+        <button onclick="appendValue('1')">1</button>
+        <button onclick="appendValue('2')">2</button>
+        <button onclick="appendValue('3')">3</button>
+        <button class="operator" onclick="appendValue('+')">+</button>
+
+        <button onclick="appendValue('0')">0</button>
+        <button onclick="appendValue('.')">.</button>
+        <button onclick="calculateResult()">=</button>
+        <button class="clear" onclick="clearHistory()">Hapus Riwayat</button>
+      </div>
+    </div>
+
+    <script>
+      let display = document.getElementById("display");
+      let history = document.getElementById("history");
+
+      function appendValue(value) {
+        display.value += value;
+      }
+
+      function clearDisplay() {
+        display.value = "";
+      }
+
+      // Fungsi Clear Entry (menghapus angka terakhir)
+      function clearEntry() {
+        display.value = display.value.slice(0, -1);
+      }
+
+      function calculateResult() {
+        try {
+          let expr = display.value;
+          if (expr.includes("%")) {
+            expr = handlePercentage(expr);
+          }
+          let result = eval(expr);
+          history.innerHTML += display.value + " = " + result + "<br>";
+          display.value = result;
+        } catch (e) {
+          display.value = "Error";
+        }
+      }
+
+      // Fungsi untuk memproses ekspresi persen
+      function handlePercentage(expression) {
+        let parts = expression.split("%");
+        if (parts.length === 2) {
+          let percent = parseFloat(parts[0]);
+          let total = parseFloat(parts[1]);
+          if (!isNaN(percent) && !isNaN(total)) {
+            return `(${percent}/100)*${total}`;
+          }
+        }
+        return expression;
+      }
+
+      function calculateSin() {
+        try {
+          let radians = parseFloat(display.value) * (Math.PI / 180);
+          let result = Math.sin(radians);
+          history.innerHTML +=
+            "sin(" + display.value + ") = " + result + "<br>";
+          display.value = result;
+        } catch (e) {
+          display.value = "Error";
+        }
+      }
+
+      function clearHistory() {
+        history.innerHTML = "<strong>History:</strong><br>";
+      }
+    </script>
+  </body>
+</html>
